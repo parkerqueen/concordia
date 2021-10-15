@@ -19,8 +19,8 @@ class HittableList : public Hittable {
     constexpr bool hit(const Ray& ray, const double t_min, const double t_max,
                        HitRecord& hit_record) const override {
         HitRecord temp;
-        auto hit_anything = false;
-        auto closest_so_far = t_max;
+        bool hit_anything = false;
+        double closest_so_far = t_max;
 
         std::for_each(objects.begin(), objects.end(), [&](const auto& object) {
             if (object->hit(ray, t_min, closest_so_far, temp)) {

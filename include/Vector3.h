@@ -15,6 +15,21 @@ class Vector3 {
     constexpr Vector3(const double x, const double y, const double z) : x(x), y(y), z(z) {}
 
     constexpr Vector3 operator-() const { return Vector3{-x, -y, -z}; }
+
+    constexpr Vector3& operator+=(const Vector3& u) {
+        x += u.x;
+        y += u.y;
+        z += u.z;
+        return *this;
+    }
+
+    constexpr Vector3& operator-=(const Vector3& u) {
+        x -= u.x;
+        y -= u.y;
+        z -= u.z;
+        return *this;
+    }
+
     constexpr double squared_norm() const { return x * x + y * y + z * z; }
     double norm() const { return sqrt(squared_norm()); }
     constexpr Vector3 unit_vector() const { return *this / norm(); }

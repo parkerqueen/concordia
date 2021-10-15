@@ -15,16 +15,17 @@ class Sphere : public Hittable {
 
     constexpr bool hit(const Ray& ray, const double t_min, const double t_max,
                        HitRecord& hit_record) const override {
-        const auto oc = ray.origin - center;
-        const auto a = ray.direction.squared_norm();
-        const auto half_b = dot(ray.direction, oc);
-        const auto c = oc.squared_norm() - (radius * radius);
+        const Vector3 oc = ray.origin - center;
 
-        const auto discriminant = half_b * half_b - a * c;
+        const double a = ray.direction.squared_norm();
+        const double half_b = dot(ray.direction, oc);
+        const double c = oc.squared_norm() - (radius * radius);
+
+        const double discriminant = half_b * half_b - a * c;
         if (discriminant < 0.0) return false;
-        const auto sqrt_discriminant = sqrt(discriminant);
+        const double sqrt_discriminant = sqrt(discriminant);
 
-        auto root = (-half_b - sqrt_discriminant) / a;
+        double root = (-half_b - sqrt_discriminant) / a;
         if (root < t_min || root > t_max) {
             root = (-half_b + sqrt(discriminant)) / a;
             if (root < t_min || root > t_max) return false;

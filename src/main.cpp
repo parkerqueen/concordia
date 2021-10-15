@@ -28,8 +28,8 @@ int main() {
         for (int i = 0; i < image_width; i++) {
             Color3 pixel_color(0.0, 0.0, 0.0);
             for (int s = 0; s < samples_per_pixel; s++) {
-                const auto u = static_cast<double>(i) / (image_width - 1);
-                const auto v = static_cast<double>(j) / (image_height - 1);
+                const auto u = static_cast<double>(i + random_double()) / (image_width - 1);
+                const auto v = static_cast<double>(j + random_double()) / (image_height - 1);
                 const auto r = camera.get_ray(u, v);
                 pixel_color += ray_color(r, world);
             }

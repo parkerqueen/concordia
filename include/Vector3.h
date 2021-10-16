@@ -3,6 +3,8 @@
 
 #include <cmath>
 
+#include "utility.h"
+
 class Vector3;
 constexpr Vector3 operator/(const Vector3&, const double);
 
@@ -33,6 +35,10 @@ class Vector3 {
     constexpr double squared_norm() const { return x * x + y * y + z * z; }
     double norm() const { return sqrt(squared_norm()); }
     constexpr Vector3 unit_vector() const { return *this / norm(); }
+
+    static constexpr Vector3 random(const double min, const double max) {
+        return Vector3{random_double(min, max), random_double(min, max), random_double(min, max)};
+    }
 };
 
 constexpr Vector3 operator+(const Vector3& u, const Vector3& v) {
@@ -59,5 +65,13 @@ constexpr Vector3 cross(const Vector3& u, const Vector3& v) {
 
 using Point3 = Vector3;
 using Color3 = Vector3;
+
+constexpr Point3 random_in_unit_sphere() {
+    while (true) {
+        const auto point = Point3::random(-1.0, 1.0);
+        if (point.squared_norm() >= 1.0) continue;
+        return point;
+    }
+}
 
 #endif

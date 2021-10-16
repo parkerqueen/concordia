@@ -3,6 +3,9 @@
 
 #include <memory>
 #include <vector>
+#include <algorithm>
+
+#include "Ray.h"
 #include "Hittable.h"
 
 class HittableList : public Hittable {

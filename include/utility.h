@@ -7,13 +7,6 @@
 #include <memory>
 #include <random>
 
-#include "Vector3.h"
-#include "Ray.h"
-#include "Hittable.h"
-#include "HittableList.h"
-#include "Sphere.h"
-#include "Camera.h"
-
 using std::make_shared;
 using std::shared_ptr;
 using uint = unsigned int;
@@ -23,21 +16,6 @@ constexpr double INF = std::numeric_limits<double>::infinity();
 
 constexpr double degs_to_rads(const double degrees) { return degrees * PI / 180.0; }
 
-inline std::ostream& write_color(std::ostream& out, const Color3& color,
-                                 const uint samples_per_pixel) {
-    double r = color.x;
-    double g = color.y;
-    double b = color.z;
-
-    double scale = 1.0 / samples_per_pixel;
-    r = std::clamp(r * scale, 0.0, 0.999);
-    g = std::clamp(g * scale, 0.0, 0.999);
-    b = std::clamp(b * scale, 0.0, 0.999);
-
-    return out << static_cast<int>(256 * r) << ' ' << static_cast<int>(256 * g) << ' '
-               << static_cast<int>(256 * b) << '\n';
-}
-
 inline double random_double() {
     static std::uniform_real_distribution<double> distribution(0.0, 1.0);
     static std::mt19937 generator;
@@ -46,6 +24,28 @@ inline double random_double() {
 
 inline double random_double(const double min, const double max) {
     return min + (max - min) * random_double();
+}
+
+#include "Vector3.h"
+#include "Ray.h"
+#include "Hittable.h"
+#include "HittableList.h"
+#include "Sphere.h"
+#include "Camera.h"
+
+inline std::ostream& write_color(std::ostream& out, const Color3& color,
+                                 const uint samples_per_pixel) {
+    double r = color.x;
+    double g = color.y;
+    double b = color.z;
+
+    double scale = 1.0 / samples_per_pixel;
+    r = std::clamp(sqrt(r * scale), 0.0, 0.999);
+    g = std::clamp(sqrt(g * scale), 0.0, 0.999);
+    b = std::clamp(sqrt(b * scale), 0.0, 0.999);
+
+    return out << static_cast<int>(256 * r) << ' ' << static_cast<int>(256 * g) << ' '
+               << static_cast<int>(256 * b) << '\n';
 }
 
 #endif

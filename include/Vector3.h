@@ -6,6 +6,7 @@
 #include "utility.h"
 
 class Vector3;
+constexpr Vector3 operator+(const Vector3&, const Vector3&);
 constexpr Vector3 operator-(const Vector3&, const Vector3&);
 constexpr Vector3 operator/(const Vector3&, const double);
 constexpr Vector3 operator*(const double s, const Vector3&);
@@ -44,6 +45,15 @@ class Vector3 {
     constexpr Vector3 reflect(const Vector3& normal) const {
         const auto& self = *this;
         return self - 2 * dot(self, normal) * normal;
+    }
+
+    constexpr Vector3 refract(const Vector3& normal, const double refraction_index) const {
+        const auto& self = *this;
+        const double cos_theta = fmin(dot(-self, normal), 1.0);
+        const Vector3 r_out_perp = refraction_index * (self + cos_theta * normal);
+        const Vector3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.squared_norm())) * normal;
+
+        return r_out_perp + r_out_parallel;
     }
 
     constexpr bool near_zero(const double thresh = 1e-8) const {

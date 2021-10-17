@@ -32,9 +32,9 @@ int main() {
     Camera camera(aspect_ratio);
 
     const auto ground_material = make_shared<Lambertian>(Color3{0.8, 0.8, 0.0});
-    const auto sphere_left_material = make_shared<Metal>(Color3{0.8, 0.8, 0.8}, 0.3);
+    const auto sphere_left_material = make_shared<Dielectric>(1.5);
     const auto sphere_right_material = make_shared<Metal>(Color3{0.8, 0.6, 0.2}, 1.0);
-    const auto sphere_center_material = make_shared<Lambertian>(Color3{0.7, 0.3, 0.3});
+    const auto sphere_center_material = make_shared<Lambertian>(Color3{0.1, 0.2, 0.5});
 
     world.add(make_shared<Sphere>(Point3{0.0, -100.5, -1}, 100.0, ground_material));
     world.add(make_shared<Sphere>(Point3{-1.0, 0.0, -1.0}, 0.5, sphere_left_material));

@@ -5,8 +5,13 @@ Color3 ray_color(const Ray& ray, const Hittable& world, const uint depth) {
 
     HitRecord hrec;
     if (world.hit(ray, 0.001, INF, hrec)) {
-        Point3 target = hrec.point + hrec.normal + random_in_unit_sphere();
-        return 0.5 * ray_color(Ray(hrec.point, target - hrec.point), world, depth - 1);
+        Ray scattered;
+        Color3 attenuation;
+
+        if (hrec.hit_material->scatter(ray, hrec, attenuation, scattered))
+            return attenuation * ray_color(scattered, world, depth - 1);
+
+        return Color3{0.0, 0.0, 0.0};
     }
 
     const auto unit_direction = ray.direction.unit_vector();
@@ -19,14 +24,22 @@ int main() {
     const double aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixel = 100;
+
     const int max_depth = 50;
+    const int samples_per_pixel = 100;
 
     HittableList world;
     Camera camera(aspect_ratio);
 
-    world.add(make_shared<Sphere>(Point3{0.0, 0.0, -1.0}, 0.5));
-    world.add(make_shared<Sphere>(Point3{0.0, -100.5, -1}, 100));
+    const auto ground_material = make_shared<Lambertian>(Color3{0.8, 0.8, 0.0});
+    const auto sphere_left_material = make_shared<Metal>(Color3{0.8, 0.8, 0.8});
+    const auto sphere_right_material = make_shared<Metal>(Color3{0.8, 0.6, 0.2});
+    const auto sphere_center_material = make_shared<Lambertian>(Color3{0.7, 0.3, 0.3});
+
+    world.add(make_shared<Sphere>(Point3{0.0, -100.5, -1}, 100.0, ground_material));
+    world.add(make_shared<Sphere>(Point3{-1.0, 0.0, -1.0}, 0.5, sphere_left_material));
+    world.add(make_shared<Sphere>(Point3{1.0, 0.0, -1.0}, 0.5, sphere_right_material));
+    world.add(make_shared<Sphere>(Point3{0.0, 0.0, -1.0}, 0.5, sphere_center_material));
 
     std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
     for (int j = image_height; j >= 0; j--) {

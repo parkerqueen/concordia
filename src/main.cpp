@@ -29,7 +29,8 @@ int main() {
     const int samples_per_pixel = 100;
 
     HittableList world;
-    Camera camera(aspect_ratio);
+    Camera camera(Point3{-0.0, 0.0, 1.0}, Point3{0.0, 0.0, -1.0}, Vector3{0.0, 1.0, 0.0},
+                  aspect_ratio, 90.0);
 
     const auto ground_material = make_shared<Lambertian>(Color3{0.8, 0.8, 0.0});
     const auto sphere_left_material = make_shared<Dielectric>(1.5);
@@ -38,6 +39,7 @@ int main() {
 
     world.add(make_shared<Sphere>(Point3{0.0, -100.5, -1}, 100.0, ground_material));
     world.add(make_shared<Sphere>(Point3{-1.0, 0.0, -1.0}, 0.5, sphere_left_material));
+    world.add(make_shared<Sphere>(Point3{-1.0, 0.0, -1.0}, -0.45, sphere_left_material));
     world.add(make_shared<Sphere>(Point3{1.0, 0.0, -1.0}, 0.5, sphere_right_material));
     world.add(make_shared<Sphere>(Point3{0.0, 0.0, -1.0}, 0.5, sphere_center_material));
 

@@ -19,8 +19,8 @@ class HittableList : public Hittable {
     constexpr void clear() { objects.clear(); }
     void add(std::shared_ptr<Hittable> object) { objects.push_back(object); }
 
-    constexpr bool hit(const Ray& ray, const double t_min, const double t_max,
-                       HitRecord& hit_record) const override {
+    bool hit(const Ray& ray, const double t_min, const double t_max,
+             HitRecord& hit_record) const override {
         HitRecord temp;
         bool hit_anything = false;
         double closest_so_far = t_max;

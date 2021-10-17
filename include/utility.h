@@ -31,6 +31,7 @@ inline double random_double(const double min, const double max) {
 #include "Hittable.h"
 #include "HittableList.h"
 #include "Sphere.h"
+#include "Material.h"
 #include "Camera.h"
 
 inline std::ostream& write_color(std::ostream& out, const Color3& color,

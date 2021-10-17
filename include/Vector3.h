@@ -6,7 +6,10 @@
 #include "utility.h"
 
 class Vector3;
+constexpr Vector3 operator-(const Vector3&, const Vector3&);
 constexpr Vector3 operator/(const Vector3&, const double);
+constexpr Vector3 operator*(const double s, const Vector3&);
+constexpr double dot(const Vector3&, const Vector3&);
 
 class Vector3 {
   public:
@@ -33,12 +36,33 @@ class Vector3 {
     }
 
     constexpr double squared_norm() const { return x * x + y * y + z * z; }
+
     double norm() const { return sqrt(squared_norm()); }
+
     constexpr Vector3 unit_vector() const { return *this / norm(); }
+
+    constexpr Vector3 reflect(const Vector3& normal) const {
+        const auto& self = *this;
+        return self - 2 * dot(self, normal) * normal;
+    }
+
+    constexpr bool near_zero(const double thresh = 1e-8) const {
+        return fabs(x) < thresh && fabs(y) < thresh && fabs(z) < thresh;
+    }
 
     static constexpr Vector3 random(const double min, const double max) {
         return Vector3{random_double(min, max), random_double(min, max), random_double(min, max)};
     }
+
+    static constexpr Vector3 random_in_unit_sphere() {
+        while (true) {
+            const auto vector = random(-1.0, 1.0);
+            if (vector.squared_norm() >= 1.0) continue;
+            return vector;
+        }
+    }
+
+    static constexpr Vector3 random_unit_vector() { return random_in_unit_sphere().unit_vector(); }
 };
 
 constexpr Vector3 operator+(const Vector3& u, const Vector3& v) {
@@ -46,6 +70,10 @@ constexpr Vector3 operator+(const Vector3& u, const Vector3& v) {
 }
 
 constexpr Vector3 operator-(const Vector3& u, const Vector3& v) { return u + (-v); }
+
+constexpr Vector3 operator*(const Vector3& u, const Vector3& v) {
+    return Vector3{u.x * v.x, u.y * v.y, u.z * v.z};
+}
 
 constexpr Vector3 operator*(const Vector3& u, const double s) {
     return Vector3{u.x * s, u.y * s, u.z * s};
@@ -65,13 +93,5 @@ constexpr Vector3 cross(const Vector3& u, const Vector3& v) {
 
 using Point3 = Vector3;
 using Color3 = Vector3;
-
-constexpr Point3 random_in_unit_sphere() {
-    while (true) {
-        const auto point = Point3::random(-1.0, 1.0);
-        if (point.squared_norm() >= 1.0) continue;
-        return point;
-    }
-}
 
 #endif

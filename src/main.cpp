@@ -32,8 +32,8 @@ int main() {
     Camera camera(aspect_ratio);
 
     const auto ground_material = make_shared<Lambertian>(Color3{0.8, 0.8, 0.0});
-    const auto sphere_left_material = make_shared<Metal>(Color3{0.8, 0.8, 0.8});
-    const auto sphere_right_material = make_shared<Metal>(Color3{0.8, 0.6, 0.2});
+    const auto sphere_left_material = make_shared<Metal>(Color3{0.8, 0.8, 0.8}, 0.3);
+    const auto sphere_right_material = make_shared<Metal>(Color3{0.8, 0.6, 0.2}, 1.0);
     const auto sphere_center_material = make_shared<Lambertian>(Color3{0.7, 0.3, 0.3});
 
     world.add(make_shared<Sphere>(Point3{0.0, -100.5, -1}, 100.0, ground_material));

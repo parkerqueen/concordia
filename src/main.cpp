@@ -49,9 +49,9 @@ int main() {
     world.add(make_shared<Sphere>(Point3{1.0, 0.0, -1.0}, 0.5, sphere_right_material));
     world.add(make_shared<Sphere>(Point3{0.0, 0.0, -1.0}, 0.5, sphere_center_material));
 
-    std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
+    PPMWriter ppm_writer("output.ppm", image_width, image_height);
     for (int j = image_height; j >= 0; j--) {
-        std::cerr << "SCANLINES REMAINING: " << j << "\n" << std::flush;
+        std::cout << "SCANLINES REMAINING: " << j << "\n";
 
         for (int i = 0; i < image_width; i++) {
             Color3 pixel_color(0.0, 0.0, 0.0);
@@ -62,7 +62,7 @@ int main() {
                 pixel_color += ray_color(r, world, max_depth);
             }
 
-            write_color(std::cout, pixel_color, samples_per_pixel);
+            ppm_writer.write_color(pixel_color, samples_per_pixel);
         }
     }
 

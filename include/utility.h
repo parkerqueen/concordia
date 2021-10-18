@@ -33,20 +33,6 @@ inline double random_double(const double min, const double max) {
 #include "Sphere.h"
 #include "Material.h"
 #include "Camera.h"
-
-inline std::ostream& write_color(std::ostream& out, const Color3& color,
-                                 const uint samples_per_pixel) {
-    double r = color.x;
-    double g = color.y;
-    double b = color.z;
-
-    double scale = 1.0 / samples_per_pixel;
-    r = std::clamp(sqrt(r * scale), 0.0, 0.999);
-    g = std::clamp(sqrt(g * scale), 0.0, 0.999);
-    b = std::clamp(sqrt(b * scale), 0.0, 0.999);
-
-    return out << static_cast<int>(256 * r) << ' ' << static_cast<int>(256 * g) << ' '
-               << static_cast<int>(256 * b) << '\n';
-}
+#include "PPMWriter.h"
 
 #endif

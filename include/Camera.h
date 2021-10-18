@@ -13,24 +13,31 @@ class Camera {
     Point3 lower_left;
     Vector3 vertical;
     Vector3 horizontal;
+    Vector3 u, v, w;
+    double lens_radius;
 
     constexpr Camera(const Point3& lookfrom, const Point3& lookat, const Vector3& vup,
-                     const double aspect_ratio, const double vfov) {
+                     const double aspect_ratio, const double vfov, const double aperture,
+                     const double focus_distance) {
         const double viewport_height = 2.0 * tan(degs_to_rads(vfov) / 2);
         const double viewport_width = aspect_ratio * viewport_height;
 
-        const Vector3 w = (lookfrom - lookat).unit_vector();
-        const Vector3 u = cross(vup, w).unit_vector();
-        const Vector3 v = cross(w, u).unit_vector();
+        w = (lookfrom - lookat).unit_vector();
+        u = cross(vup, w).unit_vector();
+        v = cross(w, u).unit_vector();
 
         origin = lookfrom;
-        horizontal = viewport_width * u;
-        vertical = viewport_height * v;
-        lower_left = origin - horizontal / 2 - vertical / 2 - w;
+        lens_radius = aperture / 2.0;
+
+        horizontal = focus_distance * viewport_width * u;
+        vertical = focus_distance * viewport_height * v;
+        lower_left = origin - horizontal / 2 - vertical / 2 - focus_distance * w;
     }
 
-    constexpr Ray get_ray(const double s, const double t) {
-        return Ray{origin, lower_left + s * horizontal + t * vertical - origin};
+    Ray get_ray(const double s, const double t) {
+        const Vector3 rd = lens_radius * Vector3::random_in_unit_disk();
+        const Vector3 offset = u * rd.x + v * rd.y;
+        return Ray{origin + offset, lower_left + s * horizontal + t * vertical - origin - offset};
     }
 };
 

@@ -21,16 +21,22 @@ Color3 ray_color(const Ray& ray, const Hittable& world, const uint depth) {
 }
 
 int main() {
+    const double aperture = 0.05;
     const double aspect_ratio = 16.0 / 9.0;
+
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
 
     const int max_depth = 50;
     const int samples_per_pixel = 100;
 
+    const Point3 lookfrom(0.0, 0.0, 1.0);
+    const Point3 lookat(0.0, 0.0, -1.0);
+    const double focus_distance = (lookfrom - lookat).norm();
+
     HittableList world;
-    Camera camera(Point3{-0.0, 0.0, 1.0}, Point3{0.0, 0.0, -1.0}, Vector3{0.0, 1.0, 0.0},
-                  aspect_ratio, 90.0);
+    Camera camera(lookfrom, lookat, Vector3{0.0, 1.0, 0.0}, aspect_ratio, 90.0, aperture,
+                  focus_distance);
 
     const auto ground_material = make_shared<Lambertian>(Color3{0.8, 0.8, 0.0});
     const auto sphere_left_material = make_shared<Dielectric>(1.5);

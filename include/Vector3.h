@@ -60,11 +60,11 @@ class Vector3 {
         return fabs(x) < thresh && fabs(y) < thresh && fabs(z) < thresh;
     }
 
-    static constexpr Vector3 random(const double min, const double max) {
+    static Vector3 random(const double min, const double max) {
         return Vector3{random_double(min, max), random_double(min, max), random_double(min, max)};
     }
 
-    static constexpr Vector3 random_in_unit_sphere() {
+    static Vector3 random_in_unit_sphere() {
         while (true) {
             const auto vector = random(-1.0, 1.0);
             if (vector.squared_norm() >= 1.0) continue;
@@ -72,7 +72,15 @@ class Vector3 {
         }
     }
 
-    static constexpr Vector3 random_unit_vector() { return random_in_unit_sphere().unit_vector(); }
+    static Vector3 random_in_unit_disk() {
+        while (true) {
+            const auto vector = Vector3{random_double(-1.0, 1.0), random_double(-1.0, 1.0), 0};
+            if (vector.squared_norm() >= 1.0) continue;
+            return vector;
+        }
+    }
+
+    static Vector3 random_unit_vector() { return random_in_unit_sphere().unit_vector(); }
 };
 
 constexpr Vector3 operator+(const Vector3& u, const Vector3& v) {

@@ -8,6 +8,7 @@
 #include <cmath>
 
 #include "Vector3.h"
+#include "constants.h"
 
 using uint = unsigned int;
 
@@ -43,8 +44,9 @@ class PPMWriter {
         g = std::clamp(std::sqrt(g * scale), 0.0, 0.999);
         b = std::clamp(std::sqrt(b * scale), 0.0, 0.999);
 
-        outfile << static_cast<int>(256 * r) << ' ' << static_cast<int>(256 * g) << ' '
-                << static_cast<int>(256 * b) << '\n';
+        outfile << static_cast<int>(PPM_COLOR_SCALING * r) << ' '
+                << static_cast<int>(PPM_COLOR_SCALING * g) << ' '
+                << static_cast<int>(PPM_COLOR_SCALING * b) << '\n';
     }
 };
 

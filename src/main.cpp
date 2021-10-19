@@ -20,22 +20,9 @@ Color3 ray_color(const Ray& ray, const Hittable& world, const uint depth) {
 }
 
 int main() {
-    const double aperture = 0.05;
-    const double aspect_ratio = 16.0 / 9.0;
-
-    const int image_width = 400;
-    const int image_height = static_cast<int>(image_width / aspect_ratio);
-
-    const int samples_per_pixel = 100;
-    const int max_shadow_ray_recursion = 50;
-
-    const Point3 lookfrom(0.0, 0.0, 1.0);
-    const Point3 lookat(0.0, 0.0, -1.0);
-    const double focus_distance = (lookfrom - lookat).norm();
-
     HittableList world;
-    Camera camera(lookfrom, lookat, Vector3{0.0, 1.0, 0.0}, aspect_ratio, 90.0, aperture,
-                  focus_distance);
+    Camera camera(CAM_LOOKFROM, CAM_LOOKAT, CAM_VUP, ASPECT_RATIO, CAM_VERTICAL_FIELD_OF_VIEW,
+                  CAM_APERTURE, CAM_FOCUS_DISTANCE);
 
     const auto ground_material = make_shared<Lambertian>(Color3{0.8, 0.8, 0.0});
     const auto sphere_left_material = make_shared<Dielectric>(1.5);
@@ -48,20 +35,20 @@ int main() {
     world.add(make_shared<Sphere>(Point3{1.0, 0.0, -1.0}, 0.5, sphere_right_material));
     world.add(make_shared<Sphere>(Point3{0.0, 0.0, -1.0}, 0.5, sphere_center_material));
 
-    PPMWriter ppm_writer("output.ppm", image_width, image_height);
-    for (int j = image_height; j >= 0; j--) {
+    PPMWriter ppm_writer("output.ppm", IMAGE_WIDTH, IMAGE_HEIGHT);
+    for (int j = IMAGE_HEIGHT; j >= 0; j--) {
         std::cout << "SCANLINES REMAINING: " << j << "\n";
 
-        for (int i = 0; i < image_width; i++) {
+        for (int i = 0; i < IMAGE_WIDTH; i++) {
             Color3 pixel_color(0.0, 0.0, 0.0);
-            for (int s = 0; s < samples_per_pixel; s++) {
-                const auto u = static_cast<double>(i + random_double()) / (image_width - 1);
-                const auto v = static_cast<double>(j + random_double()) / (image_height - 1);
+            for (int s = 0; s < RAYS_PER_PIXEL; s++) {
+                const auto u = static_cast<double>(i + random_double()) / (IMAGE_WIDTH - 1);
+                const auto v = static_cast<double>(j + random_double()) / (IMAGE_HEIGHT - 1);
                 const auto r = camera.get_ray(u, v);
-                pixel_color += ray_color(r, world, max_shadow_ray_recursion);
+                pixel_color += ray_color(r, world, MAX_SHADOW_RAYS_PER_RAY);
             }
 
-            ppm_writer.write_color(pixel_color, samples_per_pixel);
+            ppm_writer.write_color(pixel_color, RAYS_PER_PIXEL);
         }
     }
 

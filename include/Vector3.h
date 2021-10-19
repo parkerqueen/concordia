@@ -60,7 +60,7 @@ class Vector3 {
         return fabs(x) < thresh && fabs(y) < thresh && fabs(z) < thresh;
     }
 
-    static Vector3 random(const double min, const double max) {
+    static Vector3 random(const double min = 0.0, const double max = 1.0) {
         return Vector3{random_double(min, max), random_double(min, max), random_double(min, max)};
     }
 
